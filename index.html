@@ -8,46 +8,9 @@
     <style>
         :root { --ouro: #FFD700; --verde: #25D366; --mic-off: #5a7d5a; --mic-on: #ff4444; }
         body { background-color: #000; color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 10px; overflow-x: hidden; }
+        .workspace { display: flex; flex-direction: row; justify-content: center; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
         
-        /* Layout Inteligente: Lado a Lado no PC, Empilhado no Celular */
-        .workspace { 
-            display: flex; 
-            flex-direction: row; 
-            justify-content: center; 
-            gap: 20px; 
-            align-items: flex-start; 
-            flex-wrap: wrap; /* Isso faz os elementos 'caírem' no celular */
-        }
-        
-        /* Ajuste dos Controles para telas estreitas (7cm) */
-        .app-container { 
-            width: 100%; 
-            max-width: 400px; 
-            border: 2px solid var(--ouro); 
-            border-radius: 20px; 
-            padding: 15px; 
-            background: #111; 
-            box-sizing: border-box; 
-        }
-
-        /* O PREVIEW agora respeita a proporção 16:9 do seu celular */
-        #cardapio-final {
-            width: 360px; /* Largura ideal para exportação WhatsApp */
-            height: 780px; /* Altura proporcional aos seus 16cm */
-            background-color: #800000; 
-            background-size: cover;
-            border: 3px solid var(--ouro); 
-            display: flex; 
-            flex-direction: column; 
-            padding: 12px; 
-            box-sizing: border-box; 
-            text-align: center; 
-            color: white;
-            position: relative; 
-            overflow: hidden;
-            flex-shrink: 0; /* Impede de amassar no PC */
-        }
-
+        .app-container { width: 100%; max-width: 400px; border: 2px solid var(--ouro); border-radius: 20px; padding: 15px; background: #111; box-sizing: border-box; }
         .scroll-grid { display: flex; gap: 8px; overflow-x: auto; padding: 10px; border: 1px solid #333; border-radius: 10px; margin-bottom: 15px; background: #000; }
         .box-sel { width: 50px; height: 50px; border-radius: 8px; border: 1px solid #fff; flex-shrink: 0; cursor: pointer; background-size: cover; }
 
@@ -59,13 +22,26 @@
         .btn-tool { width: 45px; height: 45px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; background: #4CAF50; color: white; }
         .btn-dim { background: #3e583e !important; }
         
-        /* Preview Elements */
-        .especialidades { display: grid; grid-template-columns: 1fr 1fr; color: var(--ouro); font-size: 11px; font-weight: bold; margin-bottom: 5px; text-align: left; gap: 2px 10px; }
-        .logo-panela { width: 320px; height: 8%; margin: 2px auto; object-fit: contain; flex-shrink: 0; }
+        /* Microfone com animação */
+        .mic { background: var(--mic-off); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+        .mic.recording { background: var(--mic-on); animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+        /* PREVIEW AJUSTADO PARA 7x16cm */
+        #cardapio-final {
+            width: 340px; /* Reduzido para evitar largura excessiva */
+            height: 780px; 
+            background-color: #800000; 
+            background-size: cover;
+            border: 3px solid var(--ouro); 
+            display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; text-align: center; color: white;
+            position: relative; overflow: hidden; flex-shrink: 0;
+        }
+
+        .logo-panela { width: 310px; height: 9%; margin: 2px auto; object-fit: contain; flex-shrink: 0; }
         .main-img { width: 100%; height: 200px; min-height: 160px; flex-shrink: 0; background-size: contain; background-repeat: no-repeat; background-position: center; }
         .pista-area { column-count: 2; column-fill: auto; column-gap: 15px; text-align: left; font-size: 11px; font-weight: bold; height: 160px; overflow: hidden; margin-bottom: 5px; }
         .delivery-section { margin-top: auto; border-top: 2px solid var(--ouro); padding-top: 5px; text-align: left; flex-shrink: 0; }
-        .footer-contatos { font-size: 10px; border-top: 1px solid var(--ouro); padding-top: 5px; flex-shrink: 0; }
         .whatsapp-row { font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
     </style>
 </head>
@@ -73,7 +49,7 @@
 
 <div class="workspace">
     <div class="app-container">
-        <h1 style="color:var(--ouro); text-align:center; font-style:italic; margin:0 0 10px 0;">MENU MAKER 1.0</h1>
+        <h1 style="color:var(--ouro); text-align:center; font-style:italic;">MENU MAKER 1.0</h1>
         
         <div class="label-it">1. FUNDO E TEXTURA</div>
         <div id="fundo-grid" class="scroll-grid"></div>
@@ -81,31 +57,75 @@
         <div class="label-it">2. IMAGEM DESTAQUE</div>
         <div id="prato-grid" class="scroll-grid"></div>
 
-        <div id="editor-campos"></div>
+        <div class="bloco-campo">
+            <div class="label-it">TÍTULO DO DESTAQUE</div>
+            <div class="row">
+                <button class="mic" id="m-tit" onclick="toggleVoz('in-tit', 'm-tit')">🎙️</button>
+                <input type="text" id="in-tit" oninput="upd()">
+                <button class="btn-tool" onclick="sz('v-tit', 2)">+</button>
+                <button class="btn-tool btn-dim" onclick="sz('v-tit', -2)">-</button>
+            </div>
+            <div class="row">
+                <select id="f-tit" onchange="upd()"></select>
+                <button class="btn-tool" onclick="st('v-tit','B')">B</button>
+                <button class="btn-tool" onclick="st('v-tit','I')">I</button>
+                <input type="color" id="c-tit" value="#FFD700" oninput="upd()" class="btn-tool" style="padding:0">
+            </div>
+        </div>
+
+        <div class="bloco-campo">
+            <div class="label-it">MENU DA PISTA</div>
+            <div class="row">
+                <button class="mic" id="m-pis" onclick="toggleVoz('in-pis', 'm-pis', true)">🎙️</button>
+                <textarea id="in-pis" rows="2" oninput="upd()"></textarea>
+                <button class="btn-tool" onclick="sz('v-pis', 1)">+</button>
+                <button class="btn-tool btn-dim" onclick="sz('v-pis', -1)">-</button>
+            </div>
+            <div class="row">
+                <select id="f-pis" onchange="upd()"></select>
+                <button class="btn-tool" onclick="st('v-pis','B')">B</button>
+                <input type="color" id="c-pis" value="#FFFFFF" oninput="upd()" class="btn-tool" style="padding:0">
+            </div>
+        </div>
+
+        <div class="bloco-campo">
+            <div class="label-it">MENU DELIVERY</div>
+            <div class="row">
+                <button class="mic" id="m-del" onclick="toggleVoz('in-del', 'm-del', true)">🎙️</button>
+                <textarea id="in-del" rows="2" oninput="upd()"></textarea>
+                <button class="btn-tool" onclick="sz('v-del', 1)">+</button>
+                <button class="btn-tool btn-dim" onclick="sz('v-del', -1)">-</button>
+            </div>
+            <div class="row">
+                <select id="f-del" onchange="upd()"></select>
+                <button class="btn-tool" onclick="st('v-del','B')">B</button>
+                <input type="color" id="c-del" value="#FFD700" oninput="upd()" class="btn-tool" style="padding:0">
+            </div>
+        </div>
 
         <button onclick="baixar()" style="background:#4CAF50; color:white; width:100%; padding:20px; border:none; border-radius:15px; font-weight:bold; cursor:pointer; font-size:18px;">💾 SALVAR IMAGEM</button>
     </div>
 
     <div id="cardapio-final">
-        <div class="especialidades">
-            <div style="line-height:1.1">• CARNES NA BRASA<br>• MASSAS DIVERSAS</div>
-            <div style="line-height:1.1">• SALADAS VARIADAS<br>• SOBREMESAS</div>
+        <div style="display:grid; grid-template-columns: 1fr 1fr; color:var(--ouro); font-size:11px; font-weight:bold; text-align:left; gap:2px 10px;">
+            <div>• CARNES NA BRASA<br>• MASSAS DIVERSAS</div>
+            <div>• SALADAS VARIADAS<br>• SOBREMESAS</div>
         </div>
         <div id="v-prato" class="main-img"></div>
         <div id="v-tit" style="font-size:24px; font-weight:bold; color:var(--ouro); font-family:Arial;">TÍTULO</div>
         <img src="imagens/logo_panela.png" class="logo-panela">
         <div id="v-data" style="font-size:9px; margin-bottom:5px;">DATA</div>
         <div style="color:var(--ouro); font-weight:bold; font-size:16px; margin-bottom:5px;">CARDÁPIO DA PISTA:</div>
-        <div id="v-pis" class="pista-area"></div>
+        <div id="v-pis" class="pista-area" style="font-family:Arial;"></div>
         <div class="delivery-section">
             <div style="color:var(--ouro); font-weight:bold; font-size:14px; text-align:center;">MARMITAS PARA DELIVERY:</div>
-            <div id="v-del" style="font-size:12px; font-weight:bold; margin-top:5px;"></div>
+            <div id="v-del" style="font-size:12px; font-weight:bold; margin-top:5px; font-family:Arial;"></div>
             <div style="display:flex; justify-content:center; gap:5px; margin-top:5px;">
                 <img src="imagens/marmita1.png" style="width:95px;">
                 <img src="imagens/marmita2.png" style="width:95px;">
             </div>
         </div>
-        <div class="footer-contatos">
+        <div style="font-size:10px; border-top: 1px solid var(--ouro); padding-top: 5px; margin-top:auto">
             <div class="whatsapp-row">(19) 3622 2772 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px"> 99836 8517</div>
             <div style="font-weight:bold; margin-top:2px;">R. Floriano Peixoto, 84 - Centro - São João da Boa Vista</div>
         </div>
@@ -114,20 +134,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-    // Gerador de controles
-    const campos = [{id:'tit', label:'TÍTULO'}, {id:'pis', label:'PISTA', multi:true}, {id:'del', label:'DELIVERY', multi:true}];
-    campos.forEach(c => {
-        document.getElementById('editor-campos').innerHTML += `
-        <div class="bloco-campo"><div class="label-it">${c.label}</div>
-            <div class="row"><button class="mic" id="m-${c.id}" onclick="toggleVoz('in-${c.id}', 'm-${c.id}', ${c.multi||false})">🎙️</button>
-            ${c.multi ? `<textarea id="in-${c.id}" rows="2" oninput="upd()"></textarea>` : `<input type="text" id="in-${c.id}" oninput="upd()">`}
-            <button class="btn-tool" onclick="sz('v-${c.id}', 1)">+</button><button class="btn-tool btn-dim" onclick="sz('v-${c.id}', -1)">-</button></div>
-            <div class="row"><select id="f-${c.id}" onchange="upd()"></select>
-            <button class="btn-tool" onclick="st('v-${c.id}','B')">B</button><button class="btn-tool" onclick="st('v-${c.id}','I')">I</button><button class="btn-tool" onclick="st('v-${c.id}','S')">S</button>
-            <input type="color" id="c-${c.id}" value="${c.id==='tit'?'#FFD700':'#FFFFFF'}" oninput="upd()" class="btn-tool" style="padding:0"></div></div>`;
-    });
-
-    // Grids e Fontes
+    // Inicialização de Grids e Fontes
     const gF = document.getElementById('fundo-grid');
     ['#800000', '#000', '#1a3a1a', '#ffffff'].forEach(c => {
         let b = document.createElement('div'); b.className='box-sel'; b.style.backgroundColor=c;
@@ -148,7 +155,27 @@
     const fontes = ['Arial', 'Impact', 'Georgia'];
     ['f-tit', 'f-pis', 'f-del'].forEach(id => { const sel=document.getElementById(id); fontes.forEach(f=>sel.add(new Option(f, f))); });
 
-    // Funções de Estilo e Voz
+    // Voz Robusta e Contínua
+    let rAtiva = null;
+    function toggleVoz(idC, idB, multi=false) {
+        const btn=document.getElementById(idB);
+        if(btn.classList.contains('recording')){ rAtiva.stop(); return; }
+        
+        const r = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+        r.lang='pt-BR'; r.continuous = true; r.interimResults = false; rAtiva=r;
+        
+        r.onstart=()=>btn.classList.add('recording');
+        r.onend=()=>btn.classList.remove('recording');
+        r.onresult=(e)=>{
+            let f = e.results[e.results.length - 1][0].transcript;
+            let c = document.getElementById(idC);
+            if(f.toLowerCase().includes("próximo")) c.value += "\n";
+            else c.value += (c.value ? (multi ? "\n" : " ") : "") + f.toUpperCase();
+            upd();
+        };
+        r.start();
+    }
+
     function sz(id, d) { let e=document.getElementById(id); e.style.fontSize=(parseFloat(window.getComputedStyle(e).fontSize)+d)+"px"; }
     function st(id, t) {
         let e=document.getElementById(id);
@@ -165,15 +192,6 @@
             v.style.fontFamily = document.getElementById('f-'+k).value; v.style.color = document.getElementById('c-'+k).value;
         });
     }
-
-    let rAtiva = null;
-    function toggleVoz(idC, idB, multi=false) {
-        const btn=document.getElementById(idB); if(btn.classList.contains('recording')){ rAtiva.stop(); return; }
-        const r = new (window.webkitSpeechRecognition || window.SpeechRecognition)(); r.lang='pt-BR'; r.continuous=true; rAtiva=r;
-        r.onstart=()=>btn.classList.add('recording'); r.onend=()=>btn.classList.remove('recording');
-        r.onresult=(e)=>{ let f=e.results[e.results.length-1][0].transcript; let c=document.getElementById(idC); c.value += (c.value?(multi?"\n":" "):"")+f.toUpperCase(); upd(); }; r.start();
-    }
-
     function baixar() {
         html2canvas(document.getElementById('cardapio-final'), { scale: 2, useCORS: true }).then(canvas => {
             const link=document.createElement('a'); link.download=`cardapio-${new Date().getTime()}.png`; link.href=canvas.toDataURL("image/png"); link.click();
