@@ -6,144 +6,121 @@
     <link rel="manifest" href="manifest.json">
     <title>Menu Maker 1.0 - Panela Velha</title>
     <style>
-        :root { --ouro: #FFD700; --verde: #25D366; --mic-off: #5a7d5a; --mic-on: #ff4444; }
-        body { background-color: #000; color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 10px; overflow-x: hidden; }
-        .workspace { display: flex; flex-direction: row; justify-content: center; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+        :root { --ouro: #FFD700; --verde: #25D366; --rubi: #700000; --mic-off: #5a7d5a; --mic-on: #ff4444; }
+        body { background-color: #000; color: white; font-family: 'Arial', sans-serif; margin: 0; padding: 5px; overflow-x: hidden; }
         
-        .app-container { width: 100%; max-width: 400px; border: 2px solid var(--ouro); border-radius: 20px; padding: 15px; background: #111; box-sizing: border-box; }
-        .scroll-grid { display: flex; gap: 8px; overflow-x: auto; padding: 10px; border: 1px solid #333; border-radius: 10px; margin-bottom: 15px; background: #000; }
-        .box-sel { width: 50px; height: 50px; border-radius: 8px; border: 1px solid #fff; flex-shrink: 0; cursor: pointer; background-size: cover; }
+        .workspace { display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .app-container { width: 100%; max-width: 330px; border: 2px solid var(--ouro); border-radius: 15px; padding: 10px; background: #111; box-sizing: border-box; }
+        
+        .scroll-grid { display: flex; gap: 5px; overflow-x: auto; padding: 8px; border: 1px solid #333; border-radius: 8px; margin-bottom: 10px; background: #000; }
+        .box-sel { width: 42px; height: 42px; border-radius: 5px; border: 1px solid #fff; flex-shrink: 0; cursor: pointer; background-size: cover; }
 
-        .bloco-campo { border-bottom: 1px solid #444; padding-bottom: 15px; margin-bottom: 15px; }
-        .row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
-        .label-it { font-size: 13px; font-weight: bold; color: var(--ouro); margin-bottom: 5px; }
+        .bloco-campo { border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px; }
+        .row { display: flex; gap: 4px; align-items: center; margin-bottom: 6px; }
+        .label-it { font-size: 11px; font-weight: bold; color: var(--ouro); margin-bottom: 3px; }
         
-        input, textarea, select { flex-grow: 1; border-radius: 8px; border: none; padding: 12px; font-size: 16px; background: #fff; color: #000; }
-        .btn-tool { width: 45px; height: 45px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; background: #4CAF50; color: white; }
+        input, textarea, select { flex-grow: 1; border-radius: 5px; border: none; padding: 8px; font-size: 14px; background: #fff; color: #000; }
+        .btn-tool { width: 38px; height: 38px; border-radius: 5px; border: none; font-weight: bold; cursor: pointer; background: #4CAF50; color: white; flex-shrink: 0; }
         .btn-dim { background: #3e583e !important; }
         
-        /* Microfone com animação */
-        .mic { background: var(--mic-off); border: none; width: 48px; height: 48px; border-radius: 50%; color: white; cursor: pointer; font-size: 22px; display: flex; align-items: center; justify-content: center; }
+        .mic { background: var(--mic-off); border: none; width: 40px; height: 40px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; flex-shrink: 0; }
         .mic.recording { background: var(--mic-on); animation: pulse 1s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* PREVIEW AJUSTADO PARA 7x16cm */
+        /* PREVIEW OTIMIZADO PARA 6x15cm COM VERMELHO RUBI */
         #cardapio-final {
-            width: 340px; /* Reduzido para evitar largura excessiva */
-            height: 780px; 
-            background-color: #800000; 
+            width: 310px; height: 740px; 
+            background-color: var(--rubi); /* Cor Rubi por padrão */
             background-size: cover;
-            border: 3px solid var(--ouro); 
-            display: flex; flex-direction: column; padding: 12px; box-sizing: border-box; text-align: center; color: white;
-            position: relative; overflow: hidden; flex-shrink: 0;
+            border: 3px solid var(--ouro); display: flex; flex-direction: column; padding: 10px; box-sizing: border-box; text-align: center; color: white;
+            position: relative; overflow: hidden;
         }
 
-        .logo-panela { width: 310px; height: 9%; margin: 2px auto; object-fit: contain; flex-shrink: 0; }
-        .main-img { width: 100%; height: 200px; min-height: 160px; flex-shrink: 0; background-size: contain; background-repeat: no-repeat; background-position: center; }
-        .pista-area { column-count: 2; column-fill: auto; column-gap: 15px; text-align: left; font-size: 11px; font-weight: bold; height: 160px; overflow: hidden; margin-bottom: 5px; }
-        .delivery-section { margin-top: auto; border-top: 2px solid var(--ouro); padding-top: 5px; text-align: left; flex-shrink: 0; }
-        .whatsapp-row { font-size: 20px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .logo-panela { width: 280px; height: 8%; margin: 2px auto; object-fit: contain; flex-shrink: 0; }
+        .main-img { width: 100%; height: 180px; min-height: 150px; flex-shrink: 0; background-size: contain; background-repeat: no-repeat; background-position: center; }
+        .pista-area { column-count: 2; column-fill: auto; column-gap: 10px; text-align: left; font-size: 10px; font-weight: bold; height: 150px; overflow: hidden; }
+        .delivery-section { margin-top: auto; border-top: 2px solid var(--ouro); padding-top: 5px; text-align: left; }
+        .whatsapp-row { font-size: 18px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
     </style>
 </head>
 <body>
 
 <div class="workspace">
     <div class="app-container">
-        <h1 style="color:var(--ouro); text-align:center; font-style:italic;">MENU MAKER 1.0</h1>
+        <h1 style="color:var(--ouro); text-align:center; font-size:18px; margin:0 0 10px 0;">MENU MAKER 1.0</h1>
         
-        <div class="label-it">1. FUNDO E TEXTURA</div>
+        <div class="label-it">FUNDO E IMAGEM DESTAQUE</div>
         <div id="fundo-grid" class="scroll-grid"></div>
-
-        <div class="label-it">2. IMAGEM DESTAQUE</div>
         <div id="prato-grid" class="scroll-grid"></div>
 
-        <div class="bloco-campo">
-            <div class="label-it">TÍTULO DO DESTAQUE</div>
-            <div class="row">
-                <button class="mic" id="m-tit" onclick="toggleVoz('in-tit', 'm-tit')">🎙️</button>
-                <input type="text" id="in-tit" oninput="upd()">
-                <button class="btn-tool" onclick="sz('v-tit', 2)">+</button>
-                <button class="btn-tool btn-dim" onclick="sz('v-tit', -2)">-</button>
-            </div>
-            <div class="row">
-                <select id="f-tit" onchange="upd()"></select>
-                <button class="btn-tool" onclick="st('v-tit','B')">B</button>
-                <button class="btn-tool" onclick="st('v-tit','I')">I</button>
-                <input type="color" id="c-tit" value="#FFD700" oninput="upd()" class="btn-tool" style="padding:0">
-            </div>
-        </div>
+        <div id="editor-dinamico"></div>
 
-        <div class="bloco-campo">
-            <div class="label-it">MENU DA PISTA</div>
-            <div class="row">
-                <button class="mic" id="m-pis" onclick="toggleVoz('in-pis', 'm-pis', true)">🎙️</button>
-                <textarea id="in-pis" rows="2" oninput="upd()"></textarea>
-                <button class="btn-tool" onclick="sz('v-pis', 1)">+</button>
-                <button class="btn-tool btn-dim" onclick="sz('v-pis', -1)">-</button>
-            </div>
-            <div class="row">
-                <select id="f-pis" onchange="upd()"></select>
-                <button class="btn-tool" onclick="st('v-pis','B')">B</button>
-                <input type="color" id="c-pis" value="#FFFFFF" oninput="upd()" class="btn-tool" style="padding:0">
-            </div>
-        </div>
-
-        <div class="bloco-campo">
-            <div class="label-it">MENU DELIVERY</div>
-            <div class="row">
-                <button class="mic" id="m-del" onclick="toggleVoz('in-del', 'm-del', true)">🎙️</button>
-                <textarea id="in-del" rows="2" oninput="upd()"></textarea>
-                <button class="btn-tool" onclick="sz('v-del', 1)">+</button>
-                <button class="btn-tool btn-dim" onclick="sz('v-del', -1)">-</button>
-            </div>
-            <div class="row">
-                <select id="f-del" onchange="upd()"></select>
-                <button class="btn-tool" onclick="st('v-del','B')">B</button>
-                <input type="color" id="c-del" value="#FFD700" oninput="upd()" class="btn-tool" style="padding:0">
-            </div>
-        </div>
-
-        <button onclick="baixar()" style="background:#4CAF50; color:white; width:100%; padding:20px; border:none; border-radius:15px; font-weight:bold; cursor:pointer; font-size:18px;">💾 SALVAR IMAGEM</button>
+        <button onclick="baixar()" style="background:#4CAF50; color:white; width:100%; padding:15px; border:none; border-radius:10px; font-weight:bold; cursor:pointer; font-size:16px;">💾 SALVAR IMAGEM</button>
     </div>
 
     <div id="cardapio-final">
-        <div style="display:grid; grid-template-columns: 1fr 1fr; color:var(--ouro); font-size:11px; font-weight:bold; text-align:left; gap:2px 10px;">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; color:var(--ouro); font-size:10px; font-weight:bold; text-align:left; gap:2px 5px;">
             <div>• CARNES NA BRASA<br>• MASSAS DIVERSAS</div>
             <div>• SALADAS VARIADAS<br>• SOBREMESAS</div>
         </div>
         <div id="v-prato" class="main-img"></div>
-        <div id="v-tit" style="font-size:24px; font-weight:bold; color:var(--ouro); font-family:Arial;">TÍTULO</div>
+        <div id="v-tit" style="font-size:22px; font-weight:bold; color:var(--ouro); font-family:Arial;">TÍTULO</div>
         <img src="imagens/logo_panela.png" class="logo-panela">
-        <div id="v-data" style="font-size:9px; margin-bottom:5px;">DATA</div>
-        <div style="color:var(--ouro); font-weight:bold; font-size:16px; margin-bottom:5px;">CARDÁPIO DA PISTA:</div>
-        <div id="v-pis" class="pista-area" style="font-family:Arial;"></div>
+        <div id="v-data" style="font-size:8px; margin-bottom:3px;">DATA</div>
+        <div style="color:var(--ouro); font-weight:bold; font-size:14px; margin-bottom:3px;">CARDÁPIO DA PISTA:</div>
+        <div id="v-pis" class="pista-area"></div>
         <div class="delivery-section">
-            <div style="color:var(--ouro); font-weight:bold; font-size:14px; text-align:center;">MARMITAS PARA DELIVERY:</div>
-            <div id="v-del" style="font-size:12px; font-weight:bold; margin-top:5px; font-family:Arial;"></div>
-            <div style="display:flex; justify-content:center; gap:5px; margin-top:5px;">
-                <img src="imagens/marmita1.png" style="width:95px;">
-                <img src="imagens/marmita2.png" style="width:95px;">
+            <div style="color:var(--ouro); font-weight:bold; font-size:13px; text-align:center;">MARMITAS PARA DELIVERY:</div>
+            <div id="v-del" style="font-size:11px; font-weight:bold;"></div>
+            <div style="display:flex; justify-content:center; gap:5px; margin-top:3px;">
+                <img src="imagens/marmita1.png" style="width:85px;">
+                <img src="imagens/marmita2.png" style="width:85px;">
             </div>
         </div>
-        <div style="font-size:10px; border-top: 1px solid var(--ouro); padding-top: 5px; margin-top:auto">
-            <div class="whatsapp-row">(19) 3622 2772 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:20px"> 99836 8517</div>
-            <div style="font-weight:bold; margin-top:2px;">R. Floriano Peixoto, 84 - Centro - São João da Boa Vista</div>
+        <div style="font-size:9px; border-top: 1px solid var(--ouro); padding-top: 3px; margin-top:auto">
+            <div class="whatsapp-row">(19) 3622 2772 <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="width:16px"> 99836 8517</div>
+            <div style="font-weight:bold;">R. Floriano Peixoto, 84 - Centro - São João da Boa Vista</div>
         </div>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-    // Inicialização de Grids e Fontes
+    const campos = [
+        {id:'tit', label:'TÍTULO', multi:false},
+        {id:'pis', label:'PISTA', multi:true},
+        {id:'del', label:'DELIVERY', multi:true}
+    ];
+
+    // Gerador de Botões A a G garantidos
+    campos.forEach(c => {
+        document.getElementById('editor-dinamico').innerHTML += `
+        <div class="bloco-campo">
+            <div class="label-it">${c.label} (A a G)</div>
+            <div class="row">
+                <button class="mic" id="m-${c.id}" onclick="toggleVoz('in-${c.id}', 'm-${c.id}', ${c.multi})">🎙️</button>
+                ${c.multi ? `<textarea id="in-${c.id}" oninput="upd()"></textarea>` : `<input type="text" id="in-${c.id}" oninput="upd()">`}
+                <button class="btn-tool" onclick="sz('v-${c.id}', 1)">+</button>
+                <button class="btn-tool btn-dim" onclick="sz('v-${c.id}', -1)">-</button>
+            </div>
+            <div class="row">
+                <select id="f-${c.id}" onchange="upd()"></select>
+                <button class="btn-tool" onclick="st('v-${c.id}','B')">B</button>
+                <button class="btn-tool" onclick="st('v-${c.id}','I')">I</button>
+                <input type="color" id="c-${c.id}" value="${c.id==='pis'?'#FFFFFF':'#FFD700'}" oninput="upd()" class="btn-tool" style="padding:0">
+            </div>
+        </div>`;
+    });
+
     const gF = document.getElementById('fundo-grid');
-    ['#800000', '#000', '#1a3a1a', '#ffffff'].forEach(c => {
-        let b = document.createElement('div'); b.className='box-sel'; b.style.backgroundColor=c;
-        b.onclick = () => { const card=document.getElementById('cardapio-final'); card.style.backgroundImage='none'; card.style.backgroundColor=c; };
+    ['#700000', '#4a0000', '#000', '#1a3a1a'].forEach(c => {
+        let b=document.createElement('div'); b.className='box-sel'; b.style.backgroundColor=c;
+        b.onclick=()=>{ document.getElementById('cardapio-final').style.backgroundImage='none'; document.getElementById('cardapio-final').style.backgroundColor=c; };
         gF.appendChild(b);
     });
     for(let i=1; i<=10; i++) {
         let b=document.createElement('div'); b.className='box-sel'; b.style.backgroundImage=`url('imagens/textura${i}.png')`;
-        b.onclick=()=>{ const card=document.getElementById('cardapio-final'); card.style.backgroundColor='transparent'; card.style.backgroundImage=`url('imagens/textura${i}.png')`; card.style.backgroundSize='cover'; };
+        b.onclick=()=>{ document.getElementById('cardapio-final').style.backgroundImage=`url('imagens/textura${i}.png')`; document.getElementById('cardapio-final').style.backgroundSize='cover'; };
         gF.appendChild(b);
     }
     const gP = document.getElementById('prato-grid');
@@ -152,41 +129,25 @@
         b.onclick=()=>document.getElementById('v-prato').style.backgroundImage=`url('imagens/main${i}.png')`;
         gP.appendChild(b);
     }
-    const fontes = ['Arial', 'Impact', 'Georgia'];
-    ['f-tit', 'f-pis', 'f-del'].forEach(id => { const sel=document.getElementById(id); fontes.forEach(f=>sel.add(new Option(f, f))); });
+    ['f-tit', 'f-pis', 'f-del'].forEach(id => { ['Arial', 'Impact', 'Georgia'].forEach(f=>document.getElementById(id).add(new Option(f, f))); });
 
-    // Voz Robusta e Contínua
     let rAtiva = null;
     function toggleVoz(idC, idB, multi=false) {
-        const btn=document.getElementById(idB);
-        if(btn.classList.contains('recording')){ rAtiva.stop(); return; }
-        
-        const r = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
-        r.lang='pt-BR'; r.continuous = true; r.interimResults = false; rAtiva=r;
-        
-        r.onstart=()=>btn.classList.add('recording');
-        r.onend=()=>btn.classList.remove('recording');
-        r.onresult=(e)=>{
-            let f = e.results[e.results.length - 1][0].transcript;
-            let c = document.getElementById(idC);
-            if(f.toLowerCase().includes("próximo")) c.value += "\n";
-            else c.value += (c.value ? (multi ? "\n" : " ") : "") + f.toUpperCase();
-            upd();
-        };
-        r.start();
+        const btn=document.getElementById(idB); if(btn.classList.contains('recording')){ rAtiva.stop(); return; }
+        const r = new (window.webkitSpeechRecognition || window.SpeechRecognition)(); r.lang='pt-BR'; r.continuous=true; rAtiva=r;
+        r.onstart=()=>btn.classList.add('recording'); r.onend=()=>btn.classList.remove('recording');
+        r.onresult=(e)=>{ let f=e.results[e.results.length-1][0].transcript; let c=document.getElementById(idC); c.value += (c.value?(multi?"\n":" "):"")+f.toUpperCase(); upd(); }; r.start();
     }
-
     function sz(id, d) { let e=document.getElementById(id); e.style.fontSize=(parseFloat(window.getComputedStyle(e).fontSize)+d)+"px"; }
     function st(id, t) {
         let e=document.getElementById(id);
         if(t==='B') e.style.fontWeight = e.style.fontWeight==='bold'?'normal':'bold';
         if(t==='I') e.style.fontStyle = e.style.fontStyle==='italic'?'normal':'italic';
-        if(t==='S') e.style.textShadow = e.style.textShadow.includes('black')?'none':'2px 2px 4px black';
     }
     function upd() {
         ['tit', 'pis', 'del'].forEach(k => {
             const v=document.getElementById('v-'+k); const i=document.getElementById('in-'+k);
-            if(k==='pis') v.innerHTML = i.value.split('\n').filter(t=>t).map(t=>`<div style="margin-bottom:2px; break-inside:avoid">• ${t.toUpperCase()}</div>`).join('');
+            if(k==='pis') v.innerHTML = i.value.split('\n').filter(t=>t).map(t=>`<div style="margin-bottom:1px; break-inside:avoid">• ${t.toUpperCase()}</div>`).join('');
             else if(k==='del') v.innerHTML = i.value.split('\n').filter(t=>t).map((t,idx)=>`<div>${idx+1} - ${t.toUpperCase()}</div>`).join('');
             else v.innerText = i.value.toUpperCase() || "TÍTULO";
             v.style.fontFamily = document.getElementById('f-'+k).value; v.style.color = document.getElementById('c-'+k).value;
@@ -197,7 +158,7 @@
             const link=document.createElement('a'); link.download=`cardapio-${new Date().getTime()}.png`; link.href=canvas.toDataURL("image/png"); link.click();
         });
     }
-    const dt=new Date(); document.getElementById('v-data').innerText = `${["DOMINGO","SEGUNDA-FEIRA","TERÇA-FEIRA","QUARTA-FEIRA","QUINTA-FEIRA","SEXTA-FEIRA","SÁBADO"][dt.getDay()]} ${dt.toLocaleDateString('pt-BR')}`;
+    document.getElementById('v-data').innerText = `${["DOMINGO","SEGUNDA-FEIRA","TERÇA-FEIRA","QUARTA-FEIRA","QUINTA-FEIRA","SEXTA-FEIRA","SÁBADO"][(new Date()).getDay()]} ${(new Date()).toLocaleDateString('pt-BR')}`;
 </script>
 </body>
 </html>
