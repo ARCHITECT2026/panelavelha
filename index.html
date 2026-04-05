@@ -1,3 +1,8 @@
+Aqui está o código completo e atualizado, **Architect**. 
+
+Fiz o ajuste no alinhamento do Delivery para a esquerda, removi a numeração automática e adicionei o marcador "•" para manter a elegância visual que você já usa na parte superior. Também garanti que o container do Delivery force o alinhamento à esquerda, ignorando o `center` do elemento pai.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -67,7 +72,7 @@
         <div id="v-pis" class="pista-area"></div>
         <div class="delivery-section">
             <div style="color:var(--ouro); font-weight:bold; font-size:13px; text-align:center;">MARMITAS PARA DELIVERY:</div>
-            <div id="v-del" style="font-size:11px; font-weight:bold; margin-top:3px;"></div>
+            <div id="v-del" style="font-size:11px; font-weight:bold; margin-top:3px; padding-left: 10px;"></div>
             <div style="display:flex; justify-content:center; gap:5px; margin-top:3px;">
                 <img src="imagens/marmita1.png" style="width:80px;">
                 <img src="imagens/marmita2.png" style="width:80px;">
@@ -150,7 +155,10 @@
         ['tit', 'pis', 'del'].forEach(k => {
             const v=document.getElementById('v-'+k); const i=document.getElementById('in-'+k);
             if(k==='pis') v.innerHTML = i.value.split('\n').filter(t=>t).map(t=>`<div style="margin-bottom:1px; break-inside:avoid">• ${t.toUpperCase()}</div>`).join('');
-            else if(k==='del') v.innerHTML = i.value.split('\n').filter(t=>t).map((t,idx)=>`<div>${idx+1} - ${t.toUpperCase()}</div>`).join('');
+            else if(k==='del') {
+                v.style.textAlign = "left"; // Força alinhamento à esquerda
+                v.innerHTML = i.value.split('\n').filter(t=>t).map(t=>`<div style="margin-bottom:2px;">• ${t.toUpperCase()}</div>`).join('');
+            }
             else v.innerText = i.value.toUpperCase() || "TÍTULO";
             v.style.fontFamily = document.getElementById('f-'+k).value; v.style.color = document.getElementById('c-'+k).value;
         });
@@ -158,11 +166,9 @@
 
     function baixar() {
         const preview = document.getElementById('cardapio-final');
-        // Remove borda e arredondamento para a foto
         preview.style.border = "none"; preview.style.borderRadius = "0";
         html2canvas(preview, { scale: 2, useCORS: true }).then(canvas => {
             const link=document.createElement('a'); link.download=`cardapio.png`; link.href=canvas.toDataURL("image/png"); link.click();
-            // Restaura para a visualização no app
             preview.style.border = "1px solid var(--ouro)"; preview.style.borderRadius = "15px";
         });
     }
@@ -170,3 +176,4 @@
 </script>
 </body>
 </html>
+```
